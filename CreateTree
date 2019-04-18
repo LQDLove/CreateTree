@@ -1,0 +1,224 @@
+//copy by other
+
+
+//#include <iostream>
+//using namespace std;
+//
+//typedef struct node{ //树的结点
+//    int data;
+//    struct node* left;
+//    struct node* right;
+//} Node;
+//
+//typedef struct { //树根
+//    Node* root;
+//} Tree;
+//
+//void insert(Tree* tree, int value)//创建树
+//{
+//    Node* node=(Node*)malloc(sizeof(Node));//创建一个节点
+//    node->data = value;
+//    node->left = NULL;
+//    node->right = NULL;
+//    if (tree->root == NULL)//判断树是不是空树
+//    {
+//        tree->root = node;
+//    }
+//    else {//不是空树
+//        Node* temp = tree->root;//从树根开始
+//        while (temp != NULL)
+//        {
+//
+//
+//            if (value < temp->data)//小于就进左儿子
+//            {
+//                if (temp->left == NULL)
+//                {
+//                    temp->left = node;
+//                    return;
+//                }
+//                else {//继续判断
+//                    temp = temp->left;
+//                }
+//            }
+//            else {//否则进右儿子
+//
+//                if (temp->right == NULL)
+//                {
+//                    temp->right = node;
+//                    return;
+//                }
+//                else {//继续判断
+//                    temp = temp->right;
+//                }
+//            }
+//        }
+//    }
+//    return;
+//}
+//
+//void inorder(Node* node)//树的中序遍历
+//{
+//    if (node != NULL)
+//    {
+//        inorder(node->left);
+//        printf("%d ",node->data);
+//        inorder(node->right);
+//    }
+//}
+//
+//int main()
+//{
+//    Tree tree;
+//    tree.root = NULL;//创建一个空树
+//    int n;
+//    scanf("%d",&n);
+//    for (int i = 0; i < n; i++)//输入n个数并创建这个树
+//    {
+//        int temp;
+//        scanf("%d",&temp);
+//        insert(&tree, temp);
+//    }
+//    inorder(tree.root);//中序遍历
+//    getchar(); getchar();
+//    return 0;
+//}
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct BTNode{
+    int data;
+    struct BTNode *lChild;
+    struct BTNode *rChild;
+}BiTNode;
+
+//先序创建二叉树
+void CreateBiTree(BiTNode **T)
+{
+    int ch;
+    scanf("%d",&ch);
+    if (ch == -1)
+    {
+        *T = NULL;
+        return;
+    }
+    else
+    {
+        *T = (BiTNode *)malloc(sizeof(BiTNode));
+        (*T)->data = ch;
+        printf("输入%d的左子节点：",ch);
+        CreateBiTree(&((*T)->lChild));
+        printf("输入%d的右子节点：",ch);
+        CreateBiTree((&(*T)->rChild));
+    }
+
+    return;
+}
+
+//先序遍历二叉树
+void PreOrderBiTree(BiTNode *T)
+{
+    if (T == NULL)
+    {
+        return;
+    }
+    else
+    {
+        printf("%d ",T->data);
+        PreOrderBiTree(T->lChild);
+        PreOrderBiTree(T->rChild);
+    }
+}
+
+//中序遍历二叉树
+void MiddleOrderBiTree(BiTNode *T)
+{
+    if (T == NULL)
+    {
+        return;
+    }
+    else
+    {
+        MiddleOrderBiTree(T->lChild);
+        printf("%d ",T->data);
+        MiddleOrderBiTree(T->rChild);
+    }
+}
+
+//后续遍历二叉树
+void PostOrderBiTree(BiTNode *T)
+{
+    if (T == NULL)
+    {
+        return;
+    }
+    else
+    {
+        PostOrderBiTree(T->lChild);
+        PostOrderBiTree(T->rChild);
+        printf("%d ",T->data);
+    }
+}
+
+//二叉树的深度
+int TreeDeep(BiTNode *T)
+{
+    int deep = 0;
+    if (T != NULL)
+    {
+        int leftdeep = TreeDeep(T->lChild);
+        int rightdeep = TreeDeep(T->rChild);
+        deep = leftdeep >= rightdeep?leftdeep+1:rightdeep+1;
+    }
+
+    return deep;
+}
+
+//叶子节点个数
+int LeafCount(BiTNode *T)
+{
+    static int count;
+    if (T != NULL)
+    {
+        if (T->lChild == NULL && T->rChild == NULL)
+        {
+            count++;
+        }
+
+        LeafCount(T->lChild);
+        LeafCount(T->rChild);
+    }
+
+    return count;
+}
+
+//主函数
+int main(int argc,const char *argv[])
+{
+    BiTNode *T;
+    int depth,leafCount = 0;
+    printf("请输入第一个节点的值，-1表示没有叶节点：\n");
+    CreateBiTree(&T);
+
+    printf("先序遍历二叉树：");
+    PreOrderBiTree(T);
+    printf("\n");
+
+    printf("中序遍历二叉树：");
+    MiddleOrderBiTree(T);
+    printf("\n");
+
+    printf("后续遍历二叉树：");
+    PostOrderBiTree(T);
+    printf("\n");
+
+    depth = TreeDeep(T);
+    printf("树的深度为：%d\n",depth);
+
+    leafCount = LeafCount(T);
+    printf("叶子节点个数:%d\n",leafCount);
+
+    return 0;
+}
